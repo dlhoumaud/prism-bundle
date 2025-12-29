@@ -38,11 +38,11 @@ Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/VOTRE-USERNAME/prism-bundle.git"
+            "url": "https://github.com/dlhoumaud/prism-bundle.git"
         }
     ],
     "require": {
-        "prism/bundle": "dev-main"
+        "prism/bundle": "main"
     }
 }
 ```
@@ -50,7 +50,7 @@ Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.
 **Étape 2 : Installer le bundle**
 
 ```bash
-composer require prism/bundle:dev-main
+composer require prism/bundle:main
 ```
 
 > 💡 **Astuce** : Une fois des versions taggées (v1.0.0, v1.1.0, etc.), vous pourrez utiliser :
