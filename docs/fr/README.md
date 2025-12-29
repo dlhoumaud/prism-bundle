@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D8.1-blue.svg)](https://www.php.net/)
 [![Symfony Version](https://img.shields.io/badge/symfony-%5E6.0%7C%5E7.0-green.svg)](https://symfony.com/)
-[![Tests](https://img.shields.io/badge/tests-399%20passed-brightgreen.svg)](https://github.com/VOTRE-USERNAME/prism-bundle/actions)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/VOTRE-USERNAME/prism-bundle)
+[![Tests](https://img.shields.io/badge/tests-399%20passed-brightgreen.svg)](https://github.com/dlhoumaud/prism-bundle)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/dlhoumaud/prism-bundle)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg)](https://phpstan.org/)
 [![PSR-12](https://img.shields.io/badge/PSR12-0%20error-brightgreen.svg)](https://phpstan.org/)
 
@@ -597,3 +597,5 @@ MIT - Voir fichier `LICENSE`.
 
 **David Lhoumaud**
 - Email: dlhoumaud@gmail.com
+
+Voir [prism-office](https://github.com/dlhoumaud/prism-office) pour l'interface graphique.
