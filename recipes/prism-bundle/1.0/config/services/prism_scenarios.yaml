@@ -1,0 +1,10 @@
+# Auto-discovery of PHP scenarios in prism/scripts/
+# This file is created by the PrismBundle recipe
+
+services:
+    # Auto-discover PHP scenarios in App\Prism namespace
+    App\Prism\:
+        resource: '%kernel.project_dir%/prism/scripts/'
+        tags:
+            - { name: 'prism' }
+            - { name: 'monolog.logger', channel: 'prism' }

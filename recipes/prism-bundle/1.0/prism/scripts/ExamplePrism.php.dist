@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Prism;
+
+use Prism\Application\Prism\AbstractPrism;
+use Prism\Domain\ValueObject\Scope;
+use Prism\Domain\ValueObject\PrismName;
+
+/**
+ * Example PHP Scenario
+ *
+ * This is an example of a custom PHP scenario.
+ * Copy this file, remove the .dist extension, and customize it.
+ */
+final class ExamplePrism extends AbstractPrism
+{
+    public function getName(): PrismName
+    {
+        return PrismName::fromString('example');
+    }
+    
+    public function load(Scope $scope): void
+    {
+        $scopeStr = $scope->toString();
+        
+        $this->logger->info('Loading example scenario', ['scope' => $scopeStr]);
+        
+        // Example: Insert a user and track it
+        $userId = $this->insertAndTrack('users', [
+            'username' => sprintf('user_%s', $scopeStr),
+            'email' => sprintf('user_%s@example.com', $scopeStr),
+            'password' => password_hash('secret', PASSWORD_BCRYPT),
+        ], []);
+        
+        $this->logger->info('User created', ['id' => $userId]);
+        
+        // purge() is automatically implemented by AbstractPrism
+    }
+}

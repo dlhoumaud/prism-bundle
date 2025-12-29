@@ -1,0 +1,4 @@
+prism:
+    enabled: '%kernel.debug%'
+    yaml_path: '%kernel.project_dir%/prism/yaml'
+    scripts_path: '%kernel.project_dir%/prism/scripts'

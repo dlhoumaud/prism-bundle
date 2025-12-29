@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Prism;
+
+use Prism\Application\Prism\YamlPrism;
+use Prism\Domain\ValueObject\Scope;
+
+/**
+ * Hybrid Scenario - PHP Part
+ *
+ * This class extends YamlPrism to combine:
+ * - YAML declarative data (hybrid_example.yaml)
+ * - PHP imperative logic (this class)
+ *
+ * Use cases:
+ * - Simple data structure in YAML
+ * - Complex business logic in PHP
+ * - Dynamic calculations based on YAML data
+ */
+final class HybridExamplePrism extends YamlPrism
+{
+    /**
+     * Override load() to add PHP logic after YAML execution
+     */
+    public function load(Scope $scope): void
+    {
+        // 1. Load YAML data first (creates admin user)
+        parent::load($scope);
+        
+        // 2. Add complex PHP logic
+        $this->createAdditionalUsers($scope);
+        $this->generateStatistics($scope);
+    }
+    
+    /**
+     * Create additional users with calculated fields
+     */
+    private function createAdditionalUsers(Scope $scope): void
+    {
+        $scopeStr = $scope->toString();
+        
+        // Get admin user created by YAML
+        $adminUsers = $this->getRepository()->executeQuery(
+            'SELECT id FROM users WHERE username = ?',
+            [sprintf('admin_%s', $scopeStr)]
+        );
+        
+        if (empty($adminUsers)) {
+            $this->logger->warning('Admin user not found, skipping additional users');
+            return;
+        }
+        
+        $adminId = $adminUsers[0]['id'];
+        
+        // Create 3 additional users with PHP logic
+        for ($i = 1; $i <= 3; $i++) {
+            $this->insertAndTrack('users', [
+                'username' => sprintf('user%d_%s', $i, $scopeStr),
+                'email' => sprintf('user%d_%s@example.com', $i, $scopeStr),
+                'password' => password_hash(sprintf('pass%d', $i), PASSWORD_BCRYPT),
+                'created_at' => new \DateTimeImmutable(),
+            ], [
+                'created_at' => 'datetime_immutable'
+            ]);
+        }
+        
+        $this->logger->info('Created 3 additional users via PHP logic');
+    }
+    
+    /**
+     * Generate statistics (example of complex business logic)
+     */
+    private function generateStatistics(Scope $scope): void
+    {
+        $scopeStr = $scope->toString();
+        
+        // Example: Calculate some stats
+        $userCount = count($this->getRepository()->executeQuery(
+            'SELECT id FROM users WHERE email LIKE ?',
+            [sprintf('%%_%s@example.com', $scopeStr)]
+        ));
+        
+        $this->logger->info('Statistics generated', [
+            'scope' => $scopeStr,
+            'total_users' => $userCount
+        ]);
+        
+        // You could insert these stats in a table, send notifications, etc.
+    }
+}

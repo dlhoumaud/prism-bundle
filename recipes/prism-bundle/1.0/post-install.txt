@@ -1,0 +1,20 @@
+<bg=blue;fg=white>              </>
+<bg=blue;fg=white> What's next? </>
+<bg=blue;fg=white>              </>
+
+  * <fg=blue>Create your first prism:</>
+    - Create the <comment>prism/</comment> directory: <comment>mkdir prism</comment>
+    - Add a YAML prism: <comment>prism/my_prism.yaml</comment>
+    - Or create a PHP prism in: <comment>src/Prism/MyPrismPrism.php</comment>
+
+  * <fg=blue>List available prisms:</>
+    <comment>php bin/console app:prism:list</comment>
+
+  * <fg=blue>Load a prism:</>
+    <comment>php bin/console app:prism:load my_prism --scope=dev</comment>
+
+  * <fg=blue>Purge a prism:</>
+    <comment>php bin/console app:prism:purge my_prism --scope=dev</comment>
+
+  * <fg=blue>Read the documentation at:</fg>
+    <comment>https://github.com/VOTRE-USERNAME/prism-bundle</comment>

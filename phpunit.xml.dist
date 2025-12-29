@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         cacheDirectory=".phpunit.cache">
+    <testsuites>
+        <testsuite name="Prism Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">src/Application</directory>
+            <directory suffix=".php">src/Domain</directory>
+            <directory suffix=".php">src/Infrastructure</directory>
+        </include>
+        <exclude>
+            <!-- Exclure les interfaces (pas de logique à tester) -->
+            <directory suffix="Interface.php">src/Application/Contract</directory>
+            <directory suffix="Interface.php">src/Domain/Contract</directory>
+            <directory suffix="Interface.php">src/Infrastructure/Contract</directory>
+            <!-- Exclure les adaptateurs externes -->
+            <directory>src/Infrastructure/Doctrine</directory>
+            <directory>src/Infrastructure/Symfony</directory>
+            <!-- Exclure les scénarios (implémentations concrètes, testées en intégration) -->
+            <directory>src/Infrastructure/Prism</directory>
+            <!-- Exclure la configuration Symfony du bundle -->
+            <directory>src/DependencyInjection</directory>
+            <file>src/PrismBundle.php</file>
+            <!-- Exclure le configurateur (méthode vide, pas de logique à tester) -->
+            <file>src/Infrastructure/Configurator/PrismConfigurator.php</file>
+            <file>src/Infrastructure/PrismConfigurator.php</file>
+        </exclude>
+    </source>
+    <coverage>
+        <report>
+            <html outputDirectory="var/report" lowUpperBound="50" highLowerBound="90"/>
+            <text outputFile="php://stdout" showUncoveredFiles="true"/>
+        </report>
+    </coverage>
+</phpunit>

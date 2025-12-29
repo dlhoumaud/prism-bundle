@@ -1,0 +1,55 @@
+# Example YAML Scenario
+# This demonstrates a simple YAML scenario with variables, lookups and multi-database support
+#
+# To use this example:
+# 1. Copy this file and remove the .dist extension
+# 2. Run: php bin/console app:prism:load example_users --scope=dev
+
+vars:
+  admin: "admin_{{ scope }}"
+  user: "user_{{ scope }}"
+
+load:
+  # Create admin user in default database
+  - table: users
+    data:
+      username: "{{ $admin }}"
+      email: "{{ $admin }}@example.com"
+      password: "{{ hash('admin123') }}"
+      created_at: "{{ now }}"
+    types:
+      created_at: datetime_immutable
+
+  # Create regular user
+  - table: users
+    data:
+      username: "{{ $user }}"
+      email: "{{ $user }}@example.com"
+      password: "{{ hash('user123') }}"
+      created_at: "{{ now }}"
+    types:
+      created_at: datetime_immutable
+
+  # Example: Insert in secondary database (if configured)
+  # Uncomment if you have a secondary database
+  # - table: audit_logs
+  #   db: %secondary%
+  #   data:
+  #     user_id:
+  #       table: users
+  #       where:
+  #         username: "{{ $admin }}"
+  #       return: id
+  #     action: "user_created"
+  #     created_at: "{{ now }}"
+  #   types:
+  #     created_at: datetime_immutable
+
+# Custom purge (optional - if not specified, automatic purge via tracker)
+# purge:
+#   - table: users
+#     where:
+#       username: "{{ $admin }}"
+#   - table: users
+#     where:
+#       username: "{{ $user }}"

@@ -1,0 +1,98 @@
+# Configuration des services pour le bundle Prism
+# Architecture hexagonale : Domain -> Application -> Infrastructure
+
+parameters:
+  # Fallback si shared.db n'existe pas dans le projet parent
+  shared.db: []
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # ============================================================================
+  # Domain Layer - Implémentations des ports (interfaces)
+  # ============================================================================
+  
+  # Adaptateur : Connexion base de données
+  Prism\Domain\Contract\DatabaseConnectionInterface:
+    class: Prism\Infrastructure\Doctrine\DbalDatabaseConnection
+    arguments:
+      - '@Doctrine\DBAL\Connection'
+
+  # Adaptateur : Tracker de ressources
+  Prism\Domain\Contract\PrismResourceTrackerInterface:
+    class: Prism\Infrastructure\Doctrine\DoctrinePrismResourceTracker
+    arguments:
+      - '@Doctrine\DBAL\Connection'
+
+  # Adaptateur : Repository de données
+  Prism\Application\Contract\PrismDataRepositoryInterface:
+    class: Prism\Infrastructure\Doctrine\DoctrinePrismDataRepository
+    arguments:
+      $connection: '@Doctrine\DBAL\Connection'
+      $registry: '@doctrine'
+      $dbNameResolver: '@Prism\Domain\Contract\DatabaseNameResolverInterface'
+
+  # Générateur de données aléatoires
+  Prism\Domain\Contract\FakeDataGeneratorInterface:
+    class: Prism\Infrastructure\Faker\SimpleFakeDataGenerator
+
+  # Résolveur de noms de bases de données
+  Prism\Domain\Contract\DatabaseNameResolverInterface:
+    class: Prism\Infrastructure\Doctrine\DatabaseNameResolver
+    arguments:
+      - '@doctrine'
+      - '%shared.db%' # Support des alias depuis shared.db (logiciel, extranet, etc.)
+
+  # Registre des scénarios (alimenté par les scénarios taggés)
+  Prism\Domain\Contract\PrismRegistryInterface:
+    class: Prism\Infrastructure\Repository\InMemoryPrismRegistry
+    arguments:
+      - !tagged_iterator prism
+      - '@Prism\Infrastructure\Symfony\Yaml\YamlPrismLoader'
+      - '@Prism\Application\Contract\PrismDataRepositoryInterface'
+      - '@Prism\Domain\Contract\PrismResourceTrackerInterface'
+      - '@Prism\Domain\Contract\FakeDataGeneratorInterface'
+      - '@Prism\Domain\Contract\DatabaseNameResolverInterface'
+      - '@logger'
+
+  # ============================================================================
+  # Application Layer - Use Cases
+  # ============================================================================
+  
+  Prism\Application\UseCase\:
+    resource: '../src/Application/UseCase/'
+    tags:
+      - { name: 'monolog.logger', channel: 'prism' }
+
+  # ============================================================================
+  # Infrastructure Layer - Adaptateurs et implémentations concrètes
+  # ============================================================================
+  
+  # Factory de contexte
+  Prism\Infrastructure\Factory\PrismContextFactory:
+    arguments:
+      - '@Prism\Domain\Contract\DatabaseConnectionInterface'
+      - '@Prism\Domain\Contract\PrismResourceTrackerInterface'
+
+  # YAML Prism Loader
+  Prism\Application\Contract\PrismLoaderInterface:
+    class: Prism\Infrastructure\Symfony\Yaml\YamlPrismLoader
+    arguments:
+      - '%prism.yaml_path%'
+      - '@Prism\Domain\Contract\FakeDataGeneratorInterface'
+
+  Prism\Infrastructure\Symfony\Yaml\YamlPrismLoader:
+    arguments:
+      - '%prism.yaml_path%'
+      - '@Prism\Domain\Contract\FakeDataGeneratorInterface'
+
+  # Commandes Symfony CLI
+  Prism\Infrastructure\Symfony\Command\:
+    resource: '../src/Infrastructure/Symfony/Command/'
+    arguments:
+      $enabled: '%prism.enabled%'
+    tags:
+      - { name: 'console.command' }
+      - { name: 'monolog.logger', channel: 'prism' }

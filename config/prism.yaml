@@ -1,0 +1,9 @@
+# Configuration par défaut du bundle Prism
+prism:
+    # Active ou désactive le bundle
+    # Par défaut : activé uniquement en mode debug (dev/test)
+    # En production (APP_ENV=prod, APP_DEBUG=0), le bundle sera automatiquement désactivé
+    enabled: '%kernel.debug%'
+    
+    # Chemin vers le dossier contenant les fichiers YAML des scénarios
+    yaml_path: '%kernel.project_dir%/prism'

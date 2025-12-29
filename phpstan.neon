@@ -1,0 +1,46 @@
+parameters:
+    level: max
+    paths:
+        - src
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        -
+            message: '#^Cannot cast mixed to (int|string|float)#'
+            path: src/Infrastructure/*
+        -
+            message: '#^Parameter .+ expects .+, (mixed given|bool\|float\|int\|string\|null given|float\|null given)\.$#'
+            path: src/Infrastructure/*
+        -
+            message: '#^Cannot access offset#'
+            path: src/Infrastructure/*
+        -
+            message: '#^Part .+ \(mixed\) of encapsed string cannot be cast to string\.$#'
+            path: src/Infrastructure/*
+        -
+            message: '#^Property .+ is never read, only written\.$#'
+        -
+            message: '#^Cannot cast mixed to (int|string)#'
+            path: src/Domain/*
+        -
+            message: '#^Parameter .+ expects .+, mixed given\.$#'
+            path: src/Domain/*
+        -
+            message: '#^Method .+ has parameter .+ with no value type specified in iterable type array\.$#'
+        -
+            message: '#^Method .+ return type has no value type specified in iterable type (array|iterable)\.$#'
+        -
+            message: '#^Parameter \#2 \$callback of function preg_replace_callback expects#'
+            path: src/Infrastructure/Symfony/Yaml/YamlPrismLoader.php
+        -
+            message: '#^Property .+ type has no value type specified in iterable type array\.$#'
+        -
+            message: '#Call to an undefined method Psr\\Log\\LoggerInterface::debug\(\)#'
+        -
+            message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)#'
+            path: src/DependencyInjection/Configuration.php
+        -
+            message: '#^Strict comparison using === between mixed and null will always evaluate to false\.$#'
+            path: src/Infrastructure/Symfony/Yaml/YamlPrismLoader.php
+        -
+            message: '#^Parameter .+ of class Prism\\Application\\DTO\\PrismContext constructor expects Doctrine\\DBAL\\Connection, Prism\\Domain\\Contract\\DatabaseConnectionInterface given\.$#'
+            path: src/Infrastructure/Factory/PrismContextFactory.php

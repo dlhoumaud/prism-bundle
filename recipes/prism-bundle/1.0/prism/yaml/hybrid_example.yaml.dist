@@ -1,0 +1,26 @@
+# Hybrid Scenario - YAML Part
+# This YAML file defines the base data structure
+# The PHP class (HybridExamplePrism.php.dist) adds complex logic on top
+#
+# To use this example:
+# 1. Copy this file and HybridExamplePrism.php.dist, remove .dist extensions
+# 2. Run: php bin/console app:prism:load hybrid_example --scope=dev
+
+vars:
+  admin: "admin_{{ scope }}"
+
+load:
+  # Base user created by YAML
+  - table: users
+    data:
+      username: "{{ $admin }}"
+      email: "{{ $admin }}@example.com"
+      password: "{{ hash('secret') }}"
+      created_at: "{{ now }}"
+    types:
+      created_at: datetime_immutable
+
+# The PHP class will add:
+# - Additional users with calculated fields
+# - Complex business logic
+# - Dynamic data generation

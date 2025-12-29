@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PSR12">
+    <description>PSR-12 Coding Standard</description>
+    
+    <file>src</file>
+    <file>tests</file>
+    
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="np"/>
+
+    <rule ref="PSR12"/>
+</ruleset>

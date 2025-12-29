@@ -1,0 +1,32 @@
+{
+    "bundles": {
+        "Prism\\PrismBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/",
+        "prism/": "%PROJECT_DIR%/prism/"
+    },
+    "post-install-output": [
+        "<bg=blue;fg=white>            </>",
+        "<bg=blue;fg=white> What's next for PrismBundle? </>",
+        "<bg=blue;fg=white>            </>",
+        "",
+        "  * <fg=blue>Prism directories created:</>",
+        "    <comment>prism/yaml/    - Place your YAML scenarios here</>",
+        "    <comment>prism/scripts/ - Place your PHP scenarios here</>",
+        "",
+        "  * <fg=blue>Create your first YAML scenario:</>",
+        "    <comment>prism/yaml/my_scenario.yaml</>",
+        "",
+        "  * <fg=blue>Or create a PHP scenario:</>",
+        "    <comment>cp prism/scripts/ExamplePrism.php.dist prism/scripts/MyScenarioPrism.php</>",
+        "    <comment>Edit prism/scripts/MyScenarioPrism.php and customize it</>",
+        "",
+        "  * <fg=blue>Load a scenario:</>",
+        "    <comment>php bin/console app:prism:load my_scenario --scope=dev</>",
+        "",
+        "  * <fg=blue>Read the documentation at:</>",
+        "    <comment>https://github.com/your-username/prism-bundle</>",
+        ""
+    ]
+}

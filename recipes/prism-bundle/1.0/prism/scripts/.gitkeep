@@ -1,0 +1,8 @@
+# Place your PHP scenarios here
+# Example: MyScenarioPrism.php
+# Or in subdirectories: workflows/OrderWorkflowPrism.php
+#
+# All PHP scenarios must:
+# - Be in the App\Prism namespace
+# - Extend Prism\Application\Prism\AbstractPrism
+# - Have a class name ending with "Prism"
