@@ -10,6 +10,8 @@
 
 Bundle Symfony pour la gestion de **scénarios fonctionnels** avec isolation multi-scope, traçabilité complète et purge intelligent.
 
+![Logo Prism](../../prism-logo-min.png)
+
 ## 🎯 Qu'est-ce que c'est ?
 
 Un **système d'orchestration de contextes métier** permettant à chaque développeur de créer des univers de données isolés, reproductibles et destructibles sans collision.
@@ -50,7 +52,7 @@ Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.
 **Étape 2 : Installer le bundle**
 
 ```bash
-composer require prism/bundle:dev-main
+composer update prism/bundle
 ```
 
 > 💡 **Astuce** : Une fois des versions taggées (v1.0.0, v1.1.0, etc.), vous pourrez utiliser :
@@ -67,7 +69,7 @@ Symfony Flex configurera automatiquement :
 **Étape 4 : Créer le dossier prism**
 
 ```bash
-mkdir prism
+mkdir -p prism/yaml prism/scripts
 ```
 
 **Étape 5 : Vérifier l'installation**

@@ -13,6 +13,8 @@
 
 Symfony Bundle for managing **functional scenarios** with multi-scope isolation, full traceability, and intelligent purging.
 
+![Logo Prism](prism-logo-min.png)
+
 ## 🎯 What is it?
 
 A **business context orchestration system** allowing each developer to create isolated, reproducible, and destructible data universes without collision.
@@ -53,7 +55,7 @@ Once the bundle is published on GitHub, add the VCS repository to `composer.json
 **Step 2: Install the bundle**
 
 ```bash
-composer require prism/bundle:dev-main
+composer update prism/bundle
 ```
 
 > 💡 **Tip**: Once tagged versions (v1.0.0, v1.1.0, etc.) are available, you can use:
@@ -70,7 +72,7 @@ Symfony Flex will automatically configure:
 **Step 4: Create the prism folder**
 
 ```bash
-mkdir prism
+mkdir -p prism/yaml prism/scripts
 ```
 
 **Step 5: Verify installation**
