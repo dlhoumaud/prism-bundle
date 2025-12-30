@@ -30,7 +30,7 @@ A **business context orchestration system** allowing each developer to create is
 
 ## 📦 Installation
 
-### Installation via Git Repository (recommended)
+### Option 1: Installation via Git Repository (recommended)
 
 Once the bundle is published on GitHub, add the VCS repository to `composer.json`:
 
@@ -81,7 +81,7 @@ php bin/console app:prism:list
 
 ---
 
-### Installation via Path Repository (local development)
+### Option 2: Installation via Path Repository (local development)
 
 **Step 1: Copy the local recipe** (for auto-configuration)
 

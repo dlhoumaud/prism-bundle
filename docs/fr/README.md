@@ -27,7 +27,7 @@ Un **système d'orchestration de contextes métier** permettant à chaque dével
 
 ## 📦 Installation
 
-### Installation via Git Repository (recommandé)
+### Option 1: Installation via Git Repository (recommandé)
 
 Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.json` :
 
@@ -37,12 +37,12 @@ Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.
 {
     "repositories": [
         {
-            "type": "vcs",
+            "type": "git",
             "url": "https://github.com/dlhoumaud/prism-bundle.git"
         }
     ],
     "require": {
-        "prism/bundle": "main"
+        "prism/bundle": "dev-main"
     }
 }
 ```
@@ -50,7 +50,7 @@ Une fois le bundle publié sur GitHub, ajoutez le repository VCS dans `composer.
 **Étape 2 : Installer le bundle**
 
 ```bash
-composer require prism/bundle:main
+composer require prism/bundle:dev-main
 ```
 
 > 💡 **Astuce** : Une fois des versions taggées (v1.0.0, v1.1.0, etc.), vous pourrez utiliser :
@@ -78,7 +78,7 @@ php bin/console app:prism:list
 
 ---
 
-### Installation via Path Repository (développement local)
+### Option 2: Installation via Path Repository (développement local)
 
 **Étape 1 : Copier la recette locale** (pour auto-configuration)
 
