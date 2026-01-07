@@ -219,6 +219,26 @@ final class YamlPrismLoader implements PrismLoaderInterface
     }
 
     /**
+     * Ajoute une variable globale à la volée (ex: var: name_user)
+     * Le nom peut être fourni avec ou sans le préfixe `$`.
+     */
+    public function addVariable(string $name, mixed $value, string $scope): void
+    {
+        $cleanName = str_starts_with((string) $name, '$') ? substr((string) $name, 1) : (string) $name;
+
+            // Résoudre les placeholders (retourne toujours une string)
+            /** @var string $resolvedValue */
+            $resolvedValue = $this->processPlaceholder(
+                (string) $value,
+                $scope
+            );
+
+        // Convertir en string pour rester compatible avec le comportement
+        // des variables initialisées depuis la section vars
+        $this->variables['$' . $cleanName] = $resolvedValue;
+    }
+
+    /**
      * Remplace les placeholders dans les données
      * Mode séquentiel : chaque champ résolu devient une variable temporaire
      *

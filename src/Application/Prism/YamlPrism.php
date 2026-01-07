@@ -165,15 +165,62 @@ class YamlPrism extends AbstractPrism
         // Démarrer un nouveau scope de variables temporaires
         $this->loader->startTemporaryScope();
 
-        $data = $this->loader->replacePlaceholders($instruction['data'], $scope->toString());
+        // Traiter les champs un par un et résoudre les placeholders au fur et à mesure
+        $data = $instruction['data'];
         $types = isset($instruction['types']) && is_array($instruction['types']) ? $instruction['types'] : [];
 
-        // Résolution des références (lookup)
         foreach ($data as $column => $value) {
+            // Cas 1: structure { var: name, value: ... } → créer une variable globale
+            if (is_array($value) && isset($value['var']) && array_key_exists('value', $value)) {
+                $varName = (string) $value['var'];
+                $inner = $value['value'];
+
+                // Si la value est elle-même un lookup, la résoudre (resolveLookupReference gère les placeholders internes)
+                if (is_array($inner) && $this->isLookupReference($inner)) {
+                    /** @var array{table: string, where: array<string, mixed>, return: string, db?: string} $inner */
+                    $resolved = $this->resolveLookupReference($inner, $scope);
+                } else {
+                    // Si c'est une string, remplacer les placeholders maintenant (pour voir les variables déjà créées)
+                    if (is_string($inner)) {
+                        $tmp = $this->loader->replacePlaceholders(['_v' => $inner], $scope->toString());
+                        $resolved = $tmp['_v'];
+                    } else {
+                        $resolved = $inner;
+                    }
+                }
+
+                // Remplacer la colonne par la valeur résolue
+                $data[$column] = $resolved;
+
+                // Mettre à jour variable temporaire
+                $this->loader->addTemporaryVariable($column, $resolved);
+
+                // Créer/mettre à jour la variable globale demandée
+                $this->loader->addVariable($varName, $resolved, $scope->toString());
+
+                continue;
+            }
+
+            // Cas 2: lookup classique (possiblement accompagné d'une clé 'var' pour exporter)
             if (is_array($value) && $this->isLookupReference($value)) {
-                /** @var array{table: string, where: array<string, mixed>, return: string} $value */
-                $data[$column] = $this->resolveLookupReference($value, $scope);
+                /** @var array{table: string, where: array<string, mixed>, return: string, var?: string} $value */
+                $resolved = $this->resolveLookupReference($value, $scope);
+                $data[$column] = $resolved;
                 // Mettre à jour la variable temporaire avec la valeur résolue
+                $this->loader->addTemporaryVariable($column, $data[$column]);
+
+                // Si la configuration de lookup demande l'export en variable globale
+                if (isset($value['var'])) {
+                    $this->loader->addVariable((string) $value['var'], $resolved, $scope->toString());
+                }
+
+                continue;
+            }
+
+            // Cas 3: valeur simple (string ou autre) — remplacer les placeholders maintenant
+            if (is_string($value) || !is_array($value)) {
+                $tmp = $this->loader->replacePlaceholders([$column => $value], $scope->toString());
+                $data[$column] = $tmp[$column];
                 $this->loader->addTemporaryVariable($column, $data[$column]);
             }
         }

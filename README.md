@@ -438,16 +438,19 @@ vendor/bin/phpstan analyse tests -c phpstan.neon --level=9 --memory-limit=256M &
 vendor/bin/phpunit -c phpunit.xml.dist --no-coverage
 
 # From the root project with Docker (⭐ RECOMMENDED)
-docker compose exec php vendor/bin/phpcs PrismBundle/src PrismBundle/tests --standard=PrismBundle/phpcs.xml.dist && \
-docker compose exec php vendor/bin/phpstan analyse PrismBundle/src -c PrismBundle/phpstan.neon --level=9 --memory-limit=256M && \
-docker compose exec php vendor/bin/phpstan analyse PrismBundle/tests -c PrismBundle/phpstan.neon --level=9 --memory-limit=256M && \
-docker compose exec php vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --no-coverage
+docker compose exec php vendor/bin/phpcs prism-bundle/src prism-bundle/tests --standard=prism-bundle/phpcs.xml.dist && \
+docker compose exec php vendor/bin/phpstan analyse prism-bundle/src -c prism-bundle/phpstan.neon --level=9 --memory-limit=256M && \
+docker compose exec php vendor/bin/phpstan analyse prism-bundle/tests -c prism-bundle/phpstan.neon --level=9 --memory-limit=256M && \
+docker compose exec php php -d pcov.directory=/var/www/html/prism-bundle vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --coverage-text
+
+
+docker compose exec php vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --no-coverage
 
 # Generate HTML report with PCOV
-docker compose exec php php -d pcov.directory=/var/www/html/PrismBundle vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --coverage-html PrismBundle/var/report
+docker compose exec php php -d pcov.directory=/var/www/html/prism-bundle vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --coverage-html prism-bundle/var/report
 
 # Generate text report in terminal
-docker compose exec php php -d pcov.directory=/var/www/html/PrismBundle vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --coverage-text
+docker compose exec php php -d pcov.directory=/var/www/html/prism-bundle vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --coverage-text
 ```
 
 **This check verifies:**
@@ -498,16 +501,16 @@ From the root project directory (with Docker):
 
 ```bash
 # Run all tests
-docker compose exec php vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --no-coverage
+docker compose exec php vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --no-coverage
 
 # Run with code coverage (100%)
-docker compose exec php php -d pcov.directory=/var/www/html/PrismBundle vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --coverage-text
+docker compose exec php php -d pcov.directory=/var/www/html/prism-bundle vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --coverage-text
 
 # Run a specific test file
-docker compose exec php php -d pcov.directory=/var/www/html/PrismBundle vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist PrismBundle/tests/Application/YamlPrismTest.php
+docker compose exec php php -d pcov.directory=/var/www/html/prism-bundle vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist prism-bundle/tests/Application/YamlPrismTest.php
 
 # Run pipe tests
-docker compose exec php vendor/bin/phpunit -c PrismBundle/phpunit.xml.dist --filter Pipe --no-coverage
+docker compose exec php vendor/bin/phpunit -c prism-bundle/phpunit.xml.dist --filter Pipe --no-coverage
 ```
 
 ---

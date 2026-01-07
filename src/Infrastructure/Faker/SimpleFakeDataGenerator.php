@@ -430,7 +430,8 @@ final class SimpleFakeDataGenerator implements FakeDataGeneratorInterface
 
     private function generateLastname(?string $scope): string
     {
-        $name = self::LASTNAMES[array_rand(self::LASTNAMES)];
+        $raw = self::LASTNAMES[array_rand(self::LASTNAMES)];
+        $name = ucfirst(strtolower($raw));
         if ($scope !== null) {
             $name .= sprintf(' (%s)', $scope);
         }

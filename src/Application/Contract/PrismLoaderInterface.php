@@ -51,6 +51,11 @@ interface PrismLoaderInterface
     public function addTemporaryVariable(string $fieldName, mixed $value): void;
 
     /**
+     * Ajoute ou met à jour une variable globale
+     */
+    public function addVariable(string $name, mixed $value, string $scope): void;
+
+    /**
      * Remplace les placeholders dans les données
      *
      * @param array<string, mixed> $data

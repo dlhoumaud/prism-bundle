@@ -73,6 +73,16 @@ class FakePrismLoader implements PrismLoaderInterface
         $this->temporaryVariables[$fieldName] = $value;
     }
 
+    public function addVariable(string $name, mixed $value, string $scope): void
+    {
+        // Simulate variable initialization: replace scope placeholder if present
+        if (is_string($value) || is_numeric($value) || (is_object($value) && method_exists($value, '__toString'))) {
+            $this->variables[$name] = str_replace('{{ scope }}', $scope, (string) $value);
+        } else {
+            $this->variables[$name] = $value;
+        }
+    }
+
     public function replacePlaceholders(array $data, string $scope): array
     {
         $this->replacePlaceholdersCallCount++;
