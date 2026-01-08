@@ -243,6 +243,28 @@ class YamlPrism extends AbstractPrism
         // Récupération de la base de données si définie
         $dbName = isset($instruction['db']) && is_string($instruction['db']) ? $instruction['db'] : null;
 
+        // Résoudre les placeholders dans la valeur de db (variables temporaires/globales)
+        if ($dbName !== null) {
+            $tmp = $this->loader->replacePlaceholders(['_db' => $dbName], $scope->toString());
+            $dbName = $tmp['_db'];
+
+            // Résoudre les alias/placeholder de connexion via le DatabaseNameResolver
+            try {
+                $resolved = $this->dbNameResolver->resolve($dbName);
+            } catch (\Throwable $e) {
+                throw new RuntimeException(sprintf(
+                    'Cannot resolve database name "%s" for instruction on table "%s": %s',
+                    $dbName,
+                    $table,
+                    $e->getMessage()
+                ));
+            }
+
+            if ($resolved !== null) {
+                $dbName = $resolved;
+            }
+        }
+
         if ($pivot !== null && is_array($pivot)) {
             // Construire le nom de table complet si dbName est fourni
             $fullTableName = $dbName !== null ? "$dbName.$table" : $table;
@@ -374,7 +396,27 @@ class YamlPrism extends AbstractPrism
     {
         $table = $reference['table'];
         $dbName = isset($reference['db']) ? $reference['db'] : null;
-        $fullTableName = $dbName !== null ? "$dbName.$table" : $table;
+
+        // Résoudre %connection% ou alias via le DatabaseNameResolver si fourni
+        if ($dbName !== null) {
+            try {
+                $resolved = $this->dbNameResolver->resolve($dbName);
+            } catch (\Throwable $e) {
+                throw new RuntimeException(sprintf(
+                    'Cannot resolve database name "%s" for lookup on table "%s": %s',
+                    $dbName,
+                    $table,
+                    $e->getMessage()
+                ));
+            }
+
+            // Si le resolver retourne une valeur, l'utiliser
+            if ($resolved !== null) {
+                $dbName = $resolved;
+            }
+        }
+
+        $fullTableName = $dbName !== null ? sprintf('%s.%s', $dbName, $table) : $table;
 
         $where = $this->loader->replacePlaceholders($reference['where'], $scope->toString());
         $returnColumn = $reference['return'];

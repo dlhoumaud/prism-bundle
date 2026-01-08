@@ -104,19 +104,42 @@ final class DoctrinePrismDataRepository implements PrismDataRepositoryInterface
             implode(' AND ', $whereClauses)
         );
 
-        $rowCount = $this->connection->executeStatement($sql, $params);
-        return is_int($rowCount) ? $rowCount : 0;
+        // Use executeStatement to ensure correct connection selection
+        return $this->executeStatement($sql, $params);
     }
 
     public function executeStatement(string $sql, array $params = []): int
     {
-        $rowCount = $this->connection->executeStatement($sql, $params);
+        // Try to detect a database name in the SQL (e.g. FROM db.table or DELETE FROM db.table)
+        $dbName = $this->extractDatabaseFromSql($sql);
+
+        $conn = $dbName !== null ? $this->getConnectionForDatabase($dbName) : $this->connection;
+
+        $rowCount = $conn->executeStatement($sql, $params);
         return is_int($rowCount) ? $rowCount : 0;
     }
 
     public function executeQuery(string $sql, array $params = []): array
     {
-        $result = $this->connection->executeQuery($sql, $params);
+        // Détecter si le SQL cible une base spécifique et utiliser la connexion correspondante
+        $dbName = $this->extractDatabaseFromSql($sql);
+        $conn = $dbName !== null ? $this->getConnectionForDatabase($dbName) : $this->connection;
+
+        $result = $conn->executeQuery($sql, $params);
         return $result->fetchAllAssociative();
+    }
+
+    /**
+     * Tente d'extraire un nom de base depuis une requête SQL simple.
+     * Supporte les formes : FROM db.table ou DELETE FROM db.table
+     */
+    private function extractDatabaseFromSql(string $sql): ?string
+    {
+        // Rechercher "FROM <db>.<table>" ou "DELETE FROM <db>.<table>"
+        if (preg_match('/\bFROM\s+(`?)([A-Za-z0-9_]+)\1\.(?:`?)([A-Za-z0-9_]+)(?:`)?/i', $sql, $matches)) {
+            return $matches[2];
+        }
+
+        return null;
     }
 }
